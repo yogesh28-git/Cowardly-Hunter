@@ -5,20 +5,61 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float runSpeed = 3f;
+    [SerializeField] private float jumpForce = 12f;
     private Vector3 playerPosition;
-    [SerializeField]private Vector3 playerScale;
+    private Vector3 playerScale;
+    [SerializeField] private ShootingAndAiming shootScript;
+    private Rigidbody2D playerRigidBody;
+    private BoxCollider2D playerCollider;
+    private bool jumpPressed = false;
+    private bool isGrounded = false;
+
+    //Shooting Related Variables
+    
+    private bool isShootingDone = false;
+    [Header("Shooting Variables")]
+    [SerializeField] private GameObject bowOnShoulder;
+    [SerializeField] private GameObject hand;
+
     private void Start()
     {
         playerScale = transform.localScale;
+        playerRigidBody = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<BoxCollider2D>();
+        playerRigidBody.gravityScale = 2f;
     }
 
     private void Update()
     {
         Movement();
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            isShootingDone = false;
+            bowOnShoulder.SetActive(false);
+            hand.SetActive(true);
+        }
+        if (Input.GetKey(KeyCode.I) && !isShootingDone)
+        {
+            isShootingDone = shootScript.Aiming();
+            if (isShootingDone)
+            {
+                hand.SetActive(false);
+                bowOnShoulder.SetActive(true);
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            hand.SetActive(false);
+            bowOnShoulder.SetActive(true);
+        }
+        
+    }
+    private void FixedUpdate()
+    {
+        Jump();
     }
     private void Movement()
     {
-        Debug.Log("transform.localScale.x Before changing : " + transform.localScale.x);
         playerPosition = transform.position;
         if (Input.GetKey(KeyCode.A))
         {
@@ -30,9 +71,30 @@ public class PlayerMovement : MonoBehaviour
             playerPosition.x += Time.deltaTime * runSpeed;
             playerScale.x = Mathf.Abs(playerScale.x);
         }
-        Debug.Log("playerSCale.x :"+playerScale.x);
+        
         transform.position = playerPosition;
         transform.localScale = playerScale;
-        Debug.Log("transform.localScale.x After changing : "+transform.localScale.x);
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            jumpPressed = true;
+        }
+    }
+
+    private void Jump()
+    {
+        if (jumpPressed && isGrounded)
+        {
+            playerRigidBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            jumpPressed = false;
+            isGrounded = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.layer == 7)
+        {
+            isGrounded = true;
+        }
     }
 }
