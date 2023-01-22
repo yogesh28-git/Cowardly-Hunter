@@ -10,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 playerScale;
     [SerializeField] private ShootingAndAiming shootScript;
     private Rigidbody2D playerRigidBody;
-    private BoxCollider2D playerCollider;
     private bool jumpPressed = false;
     private bool isGrounded = false;
 
@@ -25,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
     {
         playerScale = transform.localScale;
         playerRigidBody = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<BoxCollider2D>();
         playerRigidBody.gravityScale = 2f;
     }
 
