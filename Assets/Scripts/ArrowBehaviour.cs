@@ -6,6 +6,7 @@ public class ArrowBehaviour : MonoBehaviour
 {
     [SerializeField] private float arrowSpeed;
     private Rigidbody2D arrowRigidBody;
+    private Path arrowReleasedPath;
     private void Start()
     {
         arrowRigidBody = GetComponent<Rigidbody2D>();
@@ -28,5 +29,14 @@ public class ArrowBehaviour : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+    }
+    public void SetArrowReleasedPath(Path arrowpath)
+    {
+        arrowReleasedPath = arrowpath;
+    }
+    public Path GetArrowReleasedPath()
+    {
+        return arrowReleasedPath;
     }
 }

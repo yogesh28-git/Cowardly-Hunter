@@ -10,9 +10,16 @@ public class ShootingAndAiming : MonoBehaviour
     private int maxTurn = 70;
     [SerializeField] private float angleIncrement = 10f;
     [SerializeField] private GameObject arrowPrefab;
+    [SerializeField] private GameObject player;
     [SerializeField] private Transform spawnPoint;
+    private PlayerMovement playermovement;
     private GameObject arrowInstance;
     private Vector3 handRotation;
+
+    private void Start()
+    {
+        playermovement = player.GetComponent<PlayerMovement>();
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
@@ -41,9 +48,10 @@ public class ShootingAndAiming : MonoBehaviour
 
         if (shootPressed)
         {
-            Debug.Log("got in");
             shootPressed = false;
             arrowInstance = Instantiate(arrowPrefab, spawnPoint.position, spawnPoint.rotation);
+            
+            arrowInstance.GetComponent<ArrowBehaviour>().SetArrowReleasedPath(playermovement.GetPlayerPath());
             transform.eulerAngles = new Vector3(0, 0, -6f);
             return true;
         }
