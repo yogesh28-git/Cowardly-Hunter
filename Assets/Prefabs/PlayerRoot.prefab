@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 3053873690403620135}
   - component: {fileID: 380995418}
   - component: {fileID: 380995417}
+  - component: {fileID: 2641981899859965834}
   m_Layer: 6
   m_Name: PlayerRoot
   m_TagString: Untagged
@@ -111,7 +112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781186554062213168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5.38, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -136,6 +137,7 @@ MonoBehaviour:
   runSpeed: 6
   transitionSpeed: 1
   shootScript: {fileID: 4421245641899933194}
+  pathcontroller: {fileID: 0}
   bowOnShoulder: {fileID: 4421245642807286841}
   hand: {fileID: 4421245641899933205}
 --- !u!50 &380995418
@@ -172,7 +174,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1.0158738}
+  m_Offset: {x: 0, y: -0.9957187}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -183,8 +185,22 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.8457596}
+  m_Size: {x: 1, y: 1.8054495}
   m_EdgeRadius: 0
+--- !u!114 &2641981899859965834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781186554062213168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69157cb15f50a1a41b555591b8e583b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerBackSpeed: -3
 --- !u!1 &2573308848880447194
 GameObject:
   m_ObjectHideFlags: 0

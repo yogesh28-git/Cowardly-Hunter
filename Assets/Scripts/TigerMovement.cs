@@ -5,40 +5,24 @@ using UnityEngine.Tilemaps;
 
 public class TigerMovement : MonoBehaviour
 {
-    [SerializeField] private float jumpForceMin;
-    [SerializeField] private float jumpForceMax;
-    [SerializeField] private GameObject path1;
-    [SerializeField] private GameObject path2;
-    [SerializeField] private GameObject path3;
-    private TilemapCollider2D path1Collider;
-    private TilemapCollider2D path2Collider;
-    private TilemapCollider2D path3Collider;
-    private Tilemap path1TileMap;
-    private Tilemap path2TileMap;
-    private Tilemap path3TileMap;
-    private float jumpForce;
-    private bool isGrounded = false;
+    [SerializeField] private PathController pathcontroller;
     private bool turnAround = false;
     private bool turnedAround = false;
-    private Vector3 tempPosition;
+    private bool cameraFollowEnabled = false;
     [SerializeField] private float moveSpeed;
     private Rigidbody2D tigerRigidBody;
     private Animator tigerAnimator;
-    private Path path = Path.path1;
+    private float pathChangeTimer = 0;
+    private int randomWaitSeconds = 3;
+    private Path currentPath = Path.path1;
     private Path moveTo = Path.path1;
-    private bool pathChanging = false;
+    private bool pathChanged = true;
     private Color highlight = Color.white;
-
+    private Vector3 velocity;
     //Raycast variables
     private RaycastHit2D hit;
     private void Start()
     {
-        path1Collider = path1.GetComponent<TilemapCollider2D>();
-        path2Collider = path2.GetComponent<TilemapCollider2D>();
-        path3Collider = path3.GetComponent<TilemapCollider2D>();
-        path1TileMap = path1.GetComponent<Tilemap>();
-        path2TileMap = path2.GetComponent<Tilemap>();
-        path3TileMap = path3.GetComponent<Tilemap>();
         tigerRigidBody = GetComponent<Rigidbody2D>();
         tigerAnimator = GetComponent<Animator>();
         highlight.a = 0.5f;
@@ -47,135 +31,83 @@ public class TigerMovement : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (!turnAround)
+        if (!turnedAround)
         {
-            if (!pathChanging)
+            if(pathChangeTimer >= randomWaitSeconds)
             {
-                if (isGrounded)
+                //Resetting loop control variables
+                pathChangeTimer = 0;
+                randomWaitSeconds = (int)Random.Range(1, 4);
+
+                //setting next path and moving
+                do
                 {
-                    pathChanging = true;
-                    tigerRigidBody.gravityScale = 0;
-                    PathReset();
                     moveTo = (Path)(int)Random.Range(0, 3);
-                    //Debug.Log("Random: " + moveTo + ", Path :" + path);
-                }
-                else
-                {
-                    moveSpeed = Random.Range(1, 6);
-                    tempPosition = transform.position;
-                    tempPosition.x += moveSpeed * 0.02f;
-                    transform.position = tempPosition;
-                }
+                } while (currentPath == moveTo);
+                pathChanged = false;
+                
             }
             else
             {
-                PathChanger();
+                pathChangeTimer += 0.02f;
+                if (!pathChanged)
+                {
+                    pathChanged = pathcontroller.PathChanger(transform, moveTo);
+                }
+                else
+                {
+                    currentPath = moveTo;
+                }
             }
         }
         else
         {
-            if (!turnedAround)
-            {
-                
-                TurnAround();
-            }
-            else
-            {
-                LookForHunter();
-            }
-        }   
-    }
-    private void PathUpdate()
-    {
-        //Trigger are changed to false and activating that collider
-        //Also, setting a highlight effect on the path the tiger is On.
-        switch (path)
-        {
-            case Path.path1:
-                
-                path1Collider.isTrigger = false;
-                path1TileMap.color = highlight;
-                break;
-            case Path.path2:
-                path2Collider.isTrigger = false;
-                path2TileMap.color = highlight;
-                break;
-            case Path.path3:
-                path3Collider.isTrigger = false;
-                path3TileMap.color = highlight;
-                break;
-        }
-    }
-    private void PathReset()
-    {
-        //collider Reset
-        path1Collider.isTrigger = true;
-        path2Collider.isTrigger = true;
-        path3Collider.isTrigger = true;
+            LookForHunter();
+        } 
 
-        //Color Reset
-        path1TileMap.color = Color.grey;
-        path2TileMap.color = Color.grey;
-        path3TileMap.color = Color.grey;
+        /*if (cameraFollowEnabled && !turnedAround)
+        {
+            CameraFollow();
+        }
+        */
     }
-    private void PathChanger()
-    {
-        Vector3 pos = transform.position;
-        
-
-        if (moveTo == Path.path1)
-        {
-            pos.y = 0;
-        }
-        else if (moveTo == Path.path2)
-        {
-            pos.y = 2;
-        }
-        else 
-        {
-            pos.y = 4;
-        }
-        transform.position = Vector3.MoveTowards(transform.position, pos, 0.1f);
-        //Debug.Log("new pos: " + transform.position + "target :" + pos);
-        if (transform.position.y == pos.y)
-        {
-            pathChanging = false;
-            path = moveTo;
-            tigerRigidBody.gravityScale = 2;
-            PathUpdate();
-            TigerJump();
-            Debug.Log("path :" + path);
-        }
-    }
-    private void TigerJump()
+   /* private void TigerMove()
     {
         if (!turnAround)
         {
-            jumpForce = Random.Range(jumpForceMin, jumpForceMax);
-            tigerAnimator.SetBool("isGrounded", false);
-            tigerRigidBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            isGrounded = false;
+            tigerRigidBody.velocity = velocity;
         } 
-    }
+    }*/
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 7)
-        {
-            tigerAnimator.SetBool("isGrounded", true);
-            isGrounded = true;
-        }
         if(collision.gameObject.layer == 8)
         {
-            if(collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == path)
+            if(collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && !pathChanged)
                 Destroy(gameObject);
             Destroy(collision.gameObject);
         }
     }
 
+    /*private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //camera follow starts when tiger reaches this collider.
+        if (collision.gameObject.layer == 10)
+        {
+            cameraFollowEnabled = true;
+        }
+    }*/
+
+    /*private void CameraFollow()
+    {
+        Vector3 camPos = Camera.main.transform.position;
+        camPos.x += moveSpeed * Time.fixedDeltaTime;
+        Camera.main.transform.position = camPos;
+    }*/
+
     public void ArrowMissed()
     {
-        turnAround = true;
+        TurnAround();
         Debug.Log("Arrow Missed");
     }
 
@@ -197,26 +129,26 @@ public class TigerMovement : MonoBehaviour
     }
     public void TurnAround()
     {
-        if (isGrounded)
-        {
-            StartCoroutine(turning());
-            Debug.Log("got in");
-            Vector3 scale = transform.localScale;
-            scale.x = -1 * Mathf.Abs(scale.x);
-            transform.localScale = scale;
-        }   
+        StartCoroutine(turning());
+        
+
+
     }
 
     IEnumerator turning()
     {
-        yield return new WaitForSeconds(1);
-        turnedAround = true;
-        yield return new WaitForSeconds(2);
+        yield return new  WaitForSeconds(1.5f);
+        //Debug.Log("got in");
         Vector3 scale = transform.localScale;
+        scale.x = -1 * Mathf.Abs(scale.x);
+        transform.localScale = scale;
+        turnedAround = true;
+
+        // Turns back to front after waiting 2 secs
+        yield return new WaitForSeconds(2.5f);
         scale.x = 1 * Mathf.Abs(scale.x);
         transform.localScale = scale;
         turnedAround = false;
-        turnAround = false;
     }
     
 }

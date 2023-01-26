@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum Path
-{
-    path1,
-    path2,
-    path3
-}
+
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float runSpeed = 3f;
@@ -21,9 +16,10 @@ public class PlayerMovement : MonoBehaviour
     private bool isShootingDone = false;
     [Header("Shooting Variables")]
     [SerializeField] private ShootingAndAiming shootScript;
+    [SerializeField] private PathController pathcontroller;
     [SerializeField] private GameObject bowOnShoulder;
     [SerializeField] private GameObject hand;
-    [SerializeField] private Rigidbody2D playerRigidBody;
+    private Rigidbody2D playerRigidBody;
     private bool transitioningPath = false;
 
     
@@ -119,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         }
         //transform.position = Vector3.MoveTowards(transform.position, pos, 0.02f);
         playerRigidBody.MovePosition(pos);
-        Debug.Log(transform.position + "pos"+ pos);
+        //Debug.Log(transform.position + "pos"+ pos);
         if (transform.position.y == pos.y)
         {
             transform.position = pos;
