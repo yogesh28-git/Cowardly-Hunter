@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 public class TigerMovement : MonoBehaviour
 {
     [SerializeField] private PathController pathcontroller;
+    [SerializeField] private SpawnerAndMover moverScript;
+    
     private bool turnAround = false;
     private bool turnedAround = false;
     private bool cameraFollowEnabled = false;
@@ -21,19 +23,22 @@ public class TigerMovement : MonoBehaviour
     private Vector3 velocity;
     //Raycast variables
     private RaycastHit2D hit;
+    [SerializeField] LayerMask layermask;
+    private int rayHitLayers;
     private void Start()
     {
         tigerRigidBody = GetComponent<Rigidbody2D>();
         tigerAnimator = GetComponent<Animator>();
         highlight.a = 0.5f;
+        rayHitLayers = layermask.value;
     }
 
-    
+
     private void FixedUpdate()
     {
         if (!turnedAround)
         {
-            if(pathChangeTimer >= randomWaitSeconds)
+            if (pathChangeTimer >= randomWaitSeconds)
             {
                 //Resetting loop control variables
                 pathChangeTimer = 0;
@@ -45,7 +50,7 @@ public class TigerMovement : MonoBehaviour
                     moveTo = (Path)(int)Random.Range(0, 3);
                 } while (currentPath == moveTo);
                 pathChanged = false;
-                
+
             }
             else
             {
@@ -63,21 +68,8 @@ public class TigerMovement : MonoBehaviour
         else
         {
             LookForHunter();
-        } 
-
-        /*if (cameraFollowEnabled && !turnedAround)
-        {
-            CameraFollow();
         }
-        */
     }
-   /* private void TigerMove()
-    {
-        if (!turnAround)
-        {
-            tigerRigidBody.velocity = velocity;
-        } 
-    }*/
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -88,22 +80,6 @@ public class TigerMovement : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-
-    /*private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //camera follow starts when tiger reaches this collider.
-        if (collision.gameObject.layer == 10)
-        {
-            cameraFollowEnabled = true;
-        }
-    }*/
-
-    /*private void CameraFollow()
-    {
-        Vector3 camPos = Camera.main.transform.position;
-        camPos.x += moveSpeed * Time.fixedDeltaTime;
-        Camera.main.transform.position = camPos;
-    }*/
 
     public void ArrowMissed()
     {
@@ -116,12 +92,14 @@ public class TigerMovement : MonoBehaviour
         for (int i = 0; i <= 6; i++)
         {
             Vector2 origin = new Vector2(transform.position.x - 2f, -2.5f + i);
-            hit = Physics2D.Raycast(origin, Vector2.left);
+            hit = Physics2D.Raycast(origin, Vector2.left, Mathf.Infinity, rayHitLayers);
             Debug.DrawRay(origin, Vector2.left, Color.black, 2f);
             if(hit.collider != null)
             {
+                Debug.Log(hit.collider.name);
                 if (hit.collider.gameObject.layer == 6)
                 {
+                    Debug.Log("Ray Hit");
                     Destroy(hit.collider.gameObject);
                 }
             }
@@ -130,9 +108,6 @@ public class TigerMovement : MonoBehaviour
     public void TurnAround()
     {
         StartCoroutine(turning());
-        
-
-
     }
 
     IEnumerator turning()
@@ -143,12 +118,14 @@ public class TigerMovement : MonoBehaviour
         scale.x = -1 * Mathf.Abs(scale.x);
         transform.localScale = scale;
         turnedAround = true;
+        moverScript.SetBackSpeed(0f);               //When tiger turns, background objects movement stops
 
         // Turns back to front after waiting 2 secs
         yield return new WaitForSeconds(2.5f);
         scale.x = 1 * Mathf.Abs(scale.x);
         transform.localScale = scale;
         turnedAround = false;
+        moverScript.SetBackSpeed(4f);
     }
     
 }

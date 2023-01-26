@@ -7,52 +7,56 @@ public class TigerAlert : MonoBehaviour
     [SerializeField] private GameObject alertCircle;
     private Vector3 actualSize;
     private Vector3 tempScale;
-    private bool entered = false;
+    private float updateValue = -0.1f;
+    private IEnumerator alert;
+
     void Start()
     {
         actualSize = alertCircle.transform.localScale;
         alertCircle.SetActive(false);
-    }
-    void Update()
-    {
+        alert = Alert();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.layer == 6)
         {
-            entered = true;
             alertCircle.SetActive(true);
-            StartCoroutine(Alert());
+            StopCoroutine(alert);
+            alert = Alert();
+            updateValue = 0.1f;
+            StartCoroutine(alert);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 6)
         {
-            entered = false;
-            StopCoroutine(Alert());
-            alertCircle.transform.localScale = actualSize;
-            alertCircle.SetActive(false);
+            StopCoroutine(alert);
+            alert = Alert();
+            updateValue = -0.1f;
+            StartCoroutine(alert);
         }
     }
 
     IEnumerator Alert()
     {
-        int i = 0;
+        
+        tempScale = alertCircle.transform.localScale;
         do
         {
-            yield return new WaitForSeconds(0.3f);
             tempScale = alertCircle.transform.localScale;
-            float factor = (tempScale.x + 0.1f) / tempScale.x;
-            tempScale.x += 0.1f;
+            yield return new WaitForSeconds(0.3f);
+            float factor = (tempScale.x + updateValue) / tempScale.x;
+            tempScale.x += updateValue;
             tempScale.y *= factor;
-            tempScale.z += factor;
             alertCircle.transform.localScale = tempScale;
-            i++;
-        } while (i<10);
-        if(i == 10)
+            yield return new WaitForEndOfFrame();
+        } while (tempScale.x < 1f && tempScale.x > actualSize.x);
+        
+        if (tempScale.x <= actualSize.x)
         {
-            //kill player
+            alertCircle.SetActive(false);
         }
+        yield return null;
     }
 }

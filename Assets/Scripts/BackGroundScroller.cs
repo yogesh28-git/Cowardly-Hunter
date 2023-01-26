@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BackGroundScroller : MonoBehaviour
 {
-    private float backSpeed = 4f;
+    public SpawnerAndMover moverScript { get; set; }
 
     void Update()
     {
-        gameObject.transform.position += Vector3.left * Time.deltaTime * backSpeed;
+        moverScript.ObjectMover(gameObject);
     }
 }
