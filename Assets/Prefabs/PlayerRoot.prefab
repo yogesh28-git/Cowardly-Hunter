@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 3053873690403620135}
   - component: {fileID: 380995418}
   - component: {fileID: 380995417}
+  - component: {fileID: 1089766507}
   m_Layer: 6
   m_Name: PlayerRoot
   m_TagString: Untagged
@@ -135,7 +136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 6
   transitionSpeed: 1
-  shootScript: {fileID: 4421245641899933194}
+  shootScript: {fileID: 0}
   pathcontroller: {fileID: 0}
   bowOnShoulder: {fileID: 4421245642807286841}
   hand: {fileID: 4421245641899933205}
@@ -186,6 +187,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.8054495}
   m_EdgeRadius: 0
+--- !u!114 &1089766507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781186554062213168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6858e35dc72a1134790ec97ca28ca0c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angleIncrement: 10
+  arrowPrefab: {fileID: 65065817504061928, guid: dbabf8c636350f849b48fe06e73a2e1e, type: 3}
+  hand: {fileID: 4421245641899933205}
+  spawnPoint: {fileID: 4421245642306025943}
 --- !u!1 &2573308848880447194
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +244,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7054939702049425571}
   - component: {fileID: 6427137499958991747}
-  - component: {fileID: 4421245641899933194}
   m_Layer: 6
   m_Name: Hand
   m_TagString: Untagged
@@ -304,22 +320,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4421245641899933194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4421245641899933205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6858e35dc72a1134790ec97ca28ca0c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  angleIncrement: 60
-  arrowPrefab: {fileID: 65065817504061928, guid: dbabf8c636350f849b48fe06e73a2e1e, type: 3}
-  player: {fileID: 1781186554062213168}
-  spawnPoint: {fileID: 4421245642306025943}
 --- !u!1 &4421245642807286841
 GameObject:
   m_ObjectHideFlags: 0

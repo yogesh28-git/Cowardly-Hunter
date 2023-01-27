@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 public enum Path
 {
-    path1,
+    invalid,
+    path3,
     path2,
-    path3
+    path1
 }
 
 
@@ -47,6 +48,26 @@ public class PathController : MonoBehaviour
         }
         return pathPos;
     }
+
+    public Path GetPath(Transform objTransform)
+    {
+        if(objTransform.position.y == path1.transform.position.y)
+        {
+            return Path.path1;
+        }
+        else if (objTransform.position.y == path2.transform.position.y)
+        {
+            return Path.path2;
+        }
+        else if (objTransform.position.y == path3.transform.position.y)
+        {
+            return Path.path3;
+        }
+        else
+        {
+            return Path.invalid;
+        }
+    }
     public void PathUpdate(Path path)
     {
         path1TileMap.color = Color.grey;
@@ -72,7 +93,7 @@ public class PathController : MonoBehaviour
 
         pos.y = GetPathPosition(moveTo).y;
         
-        objectOnPath.transform.position = Vector3.MoveTowards(objectOnPath.transform.position, pos, 0.1f);
+        objectOnPath.transform.position = Vector3.MoveTowards(objectOnPath.transform.position, pos, 0.05f);
         //Debug.Log("new pos: " + transform.position + "target :" + pos);
         if (objectOnPath.transform.position.y == pos.y)
         {

@@ -7,27 +7,34 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float runSpeed = 3f;
-    [SerializeField] private float transitionSpeed = 1f; 
+    [SerializeField] private float transitionSpeed = 1f;
+    [SerializeField] private PathController pathcontroller;
+    [SerializeField] private GameObject player;
     private Vector3 playerPosition;
     private Vector3 playerScale;
+    private Rigidbody2D playerRigidBody;
+    private Animator playerAnimator;
+    private SpriteRenderer playerRenderer;
+    private bool transitioningPath = false;
+    private bool playerscared = false;
+
 
     //Shooting Related Variables
-    
+
     private bool isShootingDone = false;
     [Header("Shooting Variables")]
-    [SerializeField] private ShootingAndAiming shootScript;
-    [SerializeField] private PathController pathcontroller;
+    private ShootingAndAiming shootScript;
     [SerializeField] private GameObject bowOnShoulder;
     [SerializeField] private GameObject hand;
-    private Rigidbody2D playerRigidBody;
-    private bool transitioningPath = false;
-
-    
+ 
     private Path moveTo = Path.path1;
     private void Start()
     {
         playerScale = transform.localScale;
         playerRigidBody = GetComponent<Rigidbody2D>();
+        shootScript = GetComponent<ShootingAndAiming>();
+        playerAnimator = player.GetComponent<Animator>();
+        playerRenderer = player.GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -45,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
             isShootingDone = false;
             bowOnShoulder.SetActive(false);
             hand.SetActive(true);
+
+            playerAnimator.SetBool("aiming", true);
         }
         if (Input.GetKey(KeyCode.I) && !isShootingDone)
         {
@@ -59,8 +68,14 @@ public class PlayerMovement : MonoBehaviour
         {
             hand.SetActive(false);
             bowOnShoulder.SetActive(true);
+
+            playerAnimator.SetBool("aiming", false);
         }
-        
+
+
+        //player Sorting Layer
+        playerRenderer.sortingLayerID = SortingLayer.layers[(int)moveTo].id;
+        Debug.Log(playerRenderer.sortingLayerName);
     }
     private void FixedUpdate()
     {
@@ -75,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
             playerPosition.x += -1 * Time.deltaTime * runSpeed;
             playerScale.x = -(Mathf.Abs(playerScale.x));
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D) && !playerscared)
         {
             playerPosition.x += Time.deltaTime * runSpeed;
             playerScale.x = Mathf.Abs(playerScale.x);
@@ -101,21 +116,8 @@ public class PlayerMovement : MonoBehaviour
     private void TransitionMotion()
     {
         Vector3 pos = transform.position;
-        if (moveTo == Path.path1)
-        {
-            pos.y = 0;
-        }
-        else if(moveTo == Path.path2)
-        {
-            pos.y = 2;
-        }
-        else
-        {
-            pos.y = 4;
-        }
-        //transform.position = Vector3.MoveTowards(transform.position, pos, 0.02f);
+        pos.y = pathcontroller.GetPathPosition(moveTo).y;
         playerRigidBody.MovePosition(pos);
-        //Debug.Log(transform.position + "pos"+ pos);
         if (transform.position.y == pos.y)
         {
             transform.position = pos;
@@ -126,6 +128,19 @@ public class PlayerMovement : MonoBehaviour
     public Path GetPlayerPath()
     {
         return moveTo;
+    }
+
+    public void PlayerScared(bool isScared)
+    {
+        playerscared = isScared;
+        if (isScared)
+        {
+            playerAnimator.SetBool("scared", true);
+        }
+        else
+        {
+            playerAnimator.SetBool("scared", false);
+        }
     }
 
 
