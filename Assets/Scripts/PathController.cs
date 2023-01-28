@@ -94,7 +94,6 @@ public class PathController : MonoBehaviour
         pos.y = GetPathPosition(moveTo).y;
         
         objectOnPath.transform.position = Vector3.MoveTowards(objectOnPath.transform.position, pos, 0.05f);
-        //Debug.Log("new pos: " + transform.position + "target :" + pos);
         if (objectOnPath.transform.position.y == pos.y)
         {
             return true;

@@ -16,7 +16,7 @@ TagManager:
   - Arrow
   - Tiger
   - Collectibles
-  - 
+  - Rhino
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: Path1
     uniqueID: 2862417769
+    locked: 0
+  - name: Tiger
+    uniqueID: 3510580651
     locked: 0

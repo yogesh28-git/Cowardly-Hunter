@@ -8,23 +8,32 @@ public class SpawnerAndMover : MonoBehaviour
     private int treeSpawnTime = 1;
     private float coinTimer = 0;
     private int coinSpawnTime = 1;
+    private float rhinoTimer = 0;
+    private int rhinoSpawnTime = 15;
     private int pathNumber;
     private int treeIndex;
 
+
     private float backSpeed;
     private float backgroundSpeed;
+    [SerializeField] private GameObject tiger;
+    private GameObject cave;
+    [SerializeField] private GameObject cavePrefab;
     [SerializeField] private GameObject[] treeList = new GameObject[2];
     [SerializeField] private PathController pathcontroller;
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject tree1, tree2, tree3, tree4;
     [SerializeField] private GameObject greenBG;
-    [SerializeField] private GameObject bg;
+    [SerializeField] private GameObject rhinoPrefab;
+    private bool isTigerDead = false;
     private GameObject bg1;
     private GameObject bg2;
     private SpawnerAndMover spawnerAndMover;
-    Vector3 bgPos1 = new Vector3(12, 11, 0);
-    Vector3 bgPos2 = new Vector3(61, 11, 0);
+    Vector3 bgPos1 = new Vector3(12, 13, 0);
+    Vector3 bgPos2 = new Vector3(61, 13, 0);
+    Vector3 tigerPos = new Vector3(32, 0, 0);
 
+    private IEnumerator huntDuration;
     private void Start()
     {
         SetBackSpeed(4f);
@@ -34,21 +43,24 @@ public class SpawnerAndMover : MonoBehaviour
         tree2.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
         tree3.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
         tree4.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
-        bg1 = bg;
+        bg1 = Instantiate(greenBG, bgPos1, Quaternion.identity);
         bg2 = Instantiate(greenBG, bgPos2, Quaternion.identity);
+
+        TigerEntry();
     }
     private void Update()
     {
-        backgroundSpeed = 0.75f * backSpeed;
+        backgroundSpeed = 0.6f * backSpeed;
 
         BackGroundSpawner();
         TreeSpawner();
         CoinSpawner();
+        RhinoSpawner();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == 7 || collision.gameObject.layer == 10)
+        if(collision.gameObject.layer == 7 || collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
         {
             Destroy(collision.gameObject);
         }
@@ -96,16 +108,72 @@ public class SpawnerAndMover : MonoBehaviour
         coinTimer += Time.deltaTime;
     }
 
+    private void RhinoSpawner()
+    {
+        if (rhinoTimer >= rhinoSpawnTime)
+        {
+            rhinoTimer = 0;
+            rhinoSpawnTime = (int)Random.Range(15, 25);
+            pathNumber = (int)Random.Range(1, 4);
+            Vector3 pos = transform.position;
+            pos.y = pathcontroller.GetPathPosition((Path)pathNumber).y;
+            GameObject rhino = Instantiate(rhinoPrefab, pos, Quaternion.identity);
+            rhino.GetComponent<SpriteRenderer>().sortingLayerID = SortingLayer.layers[pathNumber].id;
+        }
+        rhinoTimer += Time.deltaTime;
+    }
+
     private void BackGroundSpawner()
     {
-       if(bg2.transform.position.x >= bgPos1.x)
-       {
-           Destroy(bg1);
-           bg1 = bg2;
-           bg2 = Instantiate(greenBG, bgPos2, Quaternion.identity);
-       }
-
         bg1.transform.position += Vector3.left * Time.deltaTime * backgroundSpeed;
         bg2.transform.position += Vector3.left * Time.deltaTime * backgroundSpeed;
+
+        if (bg2.transform.position.x <= bgPos1.x)
+        {
+            Destroy(bg1);
+            bg1 = bg2;
+            bg2 = Instantiate(greenBG, bgPos2, Quaternion.identity);
+        }
+    }
+    private void TigerEntry()
+    {
+        huntDuration = HuntDuration();
+        StartCoroutine(huntDuration);
+    }
+
+    public void TigerKilled()
+    {
+        tiger.SetActive(false);
+        StopCoroutine(huntDuration);
+        TigerEntry();
+    }
+    IEnumerator HuntDuration()
+    {
+        yield return new WaitForSeconds(5);
+        tiger.SetActive(true);
+        tiger.transform.position = tigerPos + new Vector3 (10, 0, 0);
+        do
+        {
+            tiger.transform.position += Vector3.left * Time.deltaTime * backSpeed;
+            yield return new WaitForEndOfFrame();
+        } while (tiger.transform.position.x >= tigerPos.x);
+        tiger.GetComponent<Animator>().SetBool("walking", true);
+
+        yield return new WaitForSeconds(120);  // This is time given to hunt the tiger. After this, the tiger will escape
+
+        cave = Instantiate(cavePrefab, tigerPos + new Vector3(10, 6, 0), Quaternion.identity);
+        do
+        {
+            cave.transform.position += Vector3.left * Time.deltaTime * backSpeed;
+            yield return new WaitForEndOfFrame();
+        } while (cave.transform.position.x >= tigerPos.x);
+        SetBackSpeed(0);
+        tiger.GetComponent<TigerMovement>().TurnToCave();
+        do
+        {
+            tiger.transform.position += Vector3.up * Time.deltaTime ;
+            yield return new WaitForEndOfFrame();
+        } while (tiger.transform.position.y <= cave.transform.position.y);
+        tiger.SetActive(false);
     }
 }

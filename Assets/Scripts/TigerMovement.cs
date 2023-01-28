@@ -10,9 +10,11 @@ public class TigerMovement : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private TigerAlert tigerAlert;
 
+    private bool isGameOver = false;
     private bool turnedAround = false;
     private IEnumerator turnCoroutine;
     private Animator tigerAnimator;
+    private SpriteRenderer tigerRenderer;
     private float pathChangeTimer = 0;
     private int randomWaitSeconds = 3;
     private Path currentPath = Path.path1;
@@ -29,6 +31,7 @@ public class TigerMovement : MonoBehaviour
     private void Start()
     {
         tigerAnimator = GetComponent<Animator>();
+        tigerRenderer = GetComponent<SpriteRenderer>();
         highlight.a = 0.5f;
         rayHitLayers = layermask.value;
         turnCoroutine = turning();
@@ -38,6 +41,15 @@ public class TigerMovement : MonoBehaviour
 
 
     private void FixedUpdate()
+    {
+        if(!isGameOver)
+            TigerMove();
+
+        //tiger Sorting Layer
+        tigerRenderer.sortingLayerID = SortingLayer.layers[(int)currentPath].id;
+    }
+
+    private void TigerMove()
     {
         if (!turnedAround)
         {
@@ -50,7 +62,7 @@ public class TigerMovement : MonoBehaviour
                 //setting next path and moving
                 do
                 {
-                    moveTo = (Path)(int)Random.Range(0, 3);
+                    moveTo = (Path)(int)Random.Range(1, 4);
                 } while (currentPath == moveTo);
                 pathChanged = false;
 
@@ -72,15 +84,17 @@ public class TigerMovement : MonoBehaviour
         {
             LookForHunter();
         }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.layer == 8)
         {
-            if(collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && !pathChanged && !turnedAround)
-                Destroy(gameObject);
+            if (collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && !pathChanged && !turnedAround)
+            {
+                moverScript.TigerKilled();
+                tigerAnimator.SetBool("walking", true);
+            }
             Destroy(collision.gameObject);
         }
     }
@@ -116,7 +130,7 @@ public class TigerMovement : MonoBehaviour
     IEnumerator turning()
     {
         yield return new  WaitForSeconds(1.5f);
-        //Debug.Log("got in");
+        Debug.Log("got in");
         Vector3 scale = transform.localScale;
         scale.x = -1 * Mathf.Abs(scale.x);
         transform.localScale = scale;
@@ -147,6 +161,7 @@ public class TigerMovement : MonoBehaviour
                     pathMoved = pathcontroller.PathChanger(transform, Path.path1);
                     currentPath = pathMoved ? Path.path1 : Path.path3;
                 }
+                Debug.Log(currentPath);
                 yield return new WaitForSeconds(0.02f);
             }
             tigerAnimator.SetBool("walking", false);
@@ -164,6 +179,7 @@ public class TigerMovement : MonoBehaviour
     
     IEnumerator KillThePlayer()
     {
+        isGameOver = true;
         player.gameObject.GetComponent<PlayerMovement>().PlayerScared(true);
         tigerAnimator.SetBool("walking", true);
         tigerAlert.RemoveAlerting();                                            //deactivate alert circle because player is already being killed.
@@ -176,5 +192,16 @@ public class TigerMovement : MonoBehaviour
             yield return new WaitForSeconds(0.02f);
         }
         tigerAnimator.SetTrigger("Attack");
+        
+    }
+
+    public void TurnToCave()
+    {
+        isGameOver = true;
+        tigerAnimator.SetTrigger("escape");
+        tigerAnimator.SetBool("walking", true);
+        tigerAlert.RemoveAlerting();                                            //deactivate alert circle because player is already being killed.
+        player.gameObject.GetComponent<PlayerMovement>().enabled = false;       //deactivate playermovement script
+        player.gameObject.GetComponent<ShootingAndAiming>().enabled = false;
     }
 }

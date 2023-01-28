@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
         //player Sorting Layer
         playerRenderer.sortingLayerID = SortingLayer.layers[(int)moveTo].id;
-        Debug.Log(playerRenderer.sortingLayerName);
+        
     }
     private void FixedUpdate()
     {
