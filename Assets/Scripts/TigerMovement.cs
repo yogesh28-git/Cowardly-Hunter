@@ -9,6 +9,7 @@ public class TigerMovement : MonoBehaviour
     [SerializeField] private SpawnerAndMover moverScript;
     [SerializeField] private Transform player;
     [SerializeField] private TigerAlert tigerAlert;
+    [SerializeField] private UI_Controller uiScript;
 
     private bool isGameOver = false;
     private bool turnedAround = false;
@@ -20,7 +21,6 @@ public class TigerMovement : MonoBehaviour
     private Path currentPath = Path.path1;
     private Path moveTo = Path.path1;
     private bool pathChanged = true;
-    private Color highlight = Color.white;
 
     //Raycast variables
     private RaycastHit2D hit;
@@ -32,7 +32,6 @@ public class TigerMovement : MonoBehaviour
     {
         tigerAnimator = GetComponent<Animator>();
         tigerRenderer = GetComponent<SpriteRenderer>();
-        highlight.a = 0.5f;
         rayHitLayers = layermask.value;
         turnCoroutine = turning();
 
@@ -77,6 +76,7 @@ public class TigerMovement : MonoBehaviour
                 else
                 {
                     currentPath = moveTo;
+                    pathcontroller.PathUpdate(currentPath);
                 }
             }
         }
@@ -90,7 +90,7 @@ public class TigerMovement : MonoBehaviour
     {
         if(collision.gameObject.layer == 8)
         {
-            if (collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && !pathChanged && !turnedAround)
+            if (collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && pathChanged && !turnedAround)
             {
                 moverScript.TigerKilled();
                 tigerAnimator.SetBool("walking", true);
@@ -117,7 +117,6 @@ public class TigerMovement : MonoBehaviour
             {
                 if ((hit.collider.gameObject.layer == player.gameObject.layer) && (this.currentPath == pathcontroller.GetPath(player)))
                 {
-                    Debug.Log("Ray Hit");
                     rayHit = true;
                     StopCoroutine(turnCoroutine);
                     turnCoroutine = turning();
@@ -130,7 +129,6 @@ public class TigerMovement : MonoBehaviour
     IEnumerator turning()
     {
         yield return new  WaitForSeconds(1.5f);
-        Debug.Log("got in");
         Vector3 scale = transform.localScale;
         scale.x = -1 * Mathf.Abs(scale.x);
         transform.localScale = scale;
@@ -161,7 +159,7 @@ public class TigerMovement : MonoBehaviour
                     pathMoved = pathcontroller.PathChanger(transform, Path.path1);
                     currentPath = pathMoved ? Path.path1 : Path.path3;
                 }
-                Debug.Log(currentPath);
+                pathcontroller.PathUpdate(currentPath);
                 yield return new WaitForSeconds(0.02f);
             }
             tigerAnimator.SetBool("walking", false);
@@ -192,7 +190,7 @@ public class TigerMovement : MonoBehaviour
             yield return new WaitForSeconds(0.02f);
         }
         tigerAnimator.SetTrigger("Attack");
-        
+        uiScript.Invoke("GameOver", 1.5f);
     }
 
     public void TurnToCave()

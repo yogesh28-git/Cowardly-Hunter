@@ -6,7 +6,7 @@ public class RhinoController : MonoBehaviour
 {
     void Update()
     {
-        transform.position += Vector3.left * Time.deltaTime * 10f;
+        transform.position += Vector3.left * Time.deltaTime * 15f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -14,11 +14,6 @@ public class RhinoController : MonoBehaviour
         if(collision.gameObject.layer == 7)
         {
             Destroy(collision.gameObject);
-        }
-
-        else if(collision.gameObject.layer == 6)
-        {
-            //GameOver
         }
     }
 }

@@ -70,6 +70,7 @@ public class TigerAlert : MonoBehaviour
     public void RemoveAlerting()
     {
         StopCoroutine(alert);
+        alert = Alert();
         alertCircle.SetActive(false);
         gameObject.SetActive(false);
     }

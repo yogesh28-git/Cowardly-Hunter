@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float transitionSpeed = 1f;
     [SerializeField] private PathController pathcontroller;
     [SerializeField] private GameObject player;
+    [SerializeField] private UI_Controller uiScript;
     private Vector3 playerPosition;
     private Vector3 playerScale;
     private Rigidbody2D playerRigidBody;
@@ -142,6 +143,12 @@ public class PlayerMovement : MonoBehaviour
             playerAnimator.SetBool("scared", false);
         }
     }
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 11)
+        {
+            uiScript.GameOver();
+        }
+    }
 
 }

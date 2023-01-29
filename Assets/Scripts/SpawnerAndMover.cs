@@ -25,6 +25,8 @@ public class SpawnerAndMover : MonoBehaviour
     [SerializeField] private GameObject tree1, tree2, tree3, tree4;
     [SerializeField] private GameObject greenBG;
     [SerializeField] private GameObject rhinoPrefab;
+    [SerializeField] private UI_Controller uiScript;
+    [SerializeField] private TigerAlert tigerAlert;
     private bool isTigerDead = false;
     private GameObject bg1;
     private GameObject bg2;
@@ -63,6 +65,10 @@ public class SpawnerAndMover : MonoBehaviour
         if(collision.gameObject.layer == 7 || collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
         {
             Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.layer == 6)
+        {
+            uiScript.GameOver();
         }
     }
     public void SetBackSpeed(float _backspeed)
@@ -143,6 +149,8 @@ public class SpawnerAndMover : MonoBehaviour
 
     public void TigerKilled()
     {
+        Debug.Log("Tiger Killed");
+        tigerAlert.RemoveAlerting();
         tiger.SetActive(false);
         StopCoroutine(huntDuration);
         TigerEntry();
@@ -151,6 +159,7 @@ public class SpawnerAndMover : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         tiger.SetActive(true);
+        tigerAlert.gameObject.SetActive(true);
         tiger.transform.position = tigerPos + new Vector3 (10, 0, 0);
         do
         {
@@ -159,7 +168,7 @@ public class SpawnerAndMover : MonoBehaviour
         } while (tiger.transform.position.x >= tigerPos.x);
         tiger.GetComponent<Animator>().SetBool("walking", true);
 
-        yield return new WaitForSeconds(120);  // This is time given to hunt the tiger. After this, the tiger will escape
+        yield return new WaitForSeconds(60);  // This is time given to hunt the tiger. After this, the tiger will escape
 
         cave = Instantiate(cavePrefab, tigerPos + new Vector3(10, 6, 0), Quaternion.identity);
         do
@@ -171,9 +180,10 @@ public class SpawnerAndMover : MonoBehaviour
         tiger.GetComponent<TigerMovement>().TurnToCave();
         do
         {
-            tiger.transform.position += Vector3.up * Time.deltaTime ;
+            tiger.transform.position += Vector3.up * Time.deltaTime * 2 ;
             yield return new WaitForEndOfFrame();
         } while (tiger.transform.position.y <= cave.transform.position.y);
         tiger.SetActive(false);
+        uiScript.GameOver();
     }
 }

@@ -27,7 +27,10 @@ public class PathController : MonoBehaviour
         path1TileMap = path1.GetComponent<Tilemap>();
         path2TileMap = path2.GetComponent<Tilemap>();
         path3TileMap = path3.GetComponent<Tilemap>();
-        highlight.a = 0.5f;
+        path1TileMap.color = Color.white;
+        path2TileMap.color = Color.white;
+        path3TileMap.color = Color.white;
+        highlight.a = 0.7f;
     }
 
     public Vector3 GetPathPosition(Path path)
@@ -70,9 +73,9 @@ public class PathController : MonoBehaviour
     }
     public void PathUpdate(Path path)
     {
-        path1TileMap.color = Color.grey;
-        path2TileMap.color = Color.grey;
-        path3TileMap.color = Color.grey;
+        path1TileMap.color = Color.white;
+        path2TileMap.color = Color.white;
+        path3TileMap.color = Color.white;
         switch (path)
         {
             case Path.path1:
