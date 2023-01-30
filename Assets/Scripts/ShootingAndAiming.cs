@@ -8,11 +8,18 @@ public class ShootingAndAiming : MonoBehaviour
     private bool shootPressed = false;
     private int minTurn = -5;
     private int maxTurn = 70;
-    [SerializeField] private float angleIncrement = 10f;
+    private float angleIncrement = 30f;
     [SerializeField] private GameObject arrowPrefab;
+    [SerializeField] private GameObject hand;
     [SerializeField] private Transform spawnPoint;
+    private PlayerMovement playermovement;
     private GameObject arrowInstance;
     private Vector3 handRotation;
+
+    private void Start()
+    {
+        playermovement = GetComponent<PlayerMovement>();
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
@@ -22,7 +29,7 @@ public class ShootingAndAiming : MonoBehaviour
     }
     public bool Aiming()
     {
-        handRotation = transform.eulerAngles;
+        handRotation = hand.transform.eulerAngles;
         if(handRotation.z > 270) { handRotation.z -= 360; }
         if(handRotation.z >= maxTurn)
         {
@@ -36,15 +43,16 @@ public class ShootingAndAiming : MonoBehaviour
         }
         
         handRotation.z += Time.deltaTime * angleIncrement;
-      
-        transform.eulerAngles = handRotation;
+
+        hand.transform.eulerAngles = handRotation;
 
         if (shootPressed)
         {
-            Debug.Log("got in");
             shootPressed = false;
             arrowInstance = Instantiate(arrowPrefab, spawnPoint.position, spawnPoint.rotation);
-            transform.eulerAngles = new Vector3(0, 0, -6f);
+            
+            arrowInstance.GetComponent<ArrowBehaviour>().SetArrowReleasedPath(playermovement.GetPlayerPath());
+            hand.transform.eulerAngles = new Vector3(0, 0, -6f);
             return true;
         }
         else

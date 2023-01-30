@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - Player
-  - Ground
+  - Tree
   - Arrow
   - Tiger
-  - TigerProximity
-  - 
+  - Collectibles
+  - Rhino
   - 
   - 
   - 
@@ -41,6 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
+  - name: Path3
     uniqueID: 2820141097
+    locked: 0
+  - name: Path2
+    uniqueID: 1405083343
+    locked: 0
+  - name: Path1
+    uniqueID: 2862417769
+    locked: 0
+  - name: Tiger
+    uniqueID: 3510580651
     locked: 0
