@@ -136,7 +136,7 @@ public class TigerMovement : MonoBehaviour
         moverScript.SetBackSpeed(0);
         moverScript.enabled = false;              // When tiger turns, background objects movement stops
         tigerAnimator.SetBool("walking", false);   // Animation changes to idle
-
+        AudioManager.Instance.PlayMusic(Sounds.danger);
 
         for (int i=0; i<3; i++)
         {
@@ -173,6 +173,7 @@ public class TigerMovement : MonoBehaviour
         moverScript.enabled = true;
         moverScript.SetBackSpeed(4f);
         tigerAnimator.SetBool("walking", true);
+        AudioManager.Instance.PlayMusic(Sounds.gameTheme);
     }
     
     IEnumerator KillThePlayer()

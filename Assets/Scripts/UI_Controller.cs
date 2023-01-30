@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 public class UI_Controller : MonoBehaviour
 {
     public static bool GamePaused = false;
@@ -14,7 +14,8 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Button pRestart;
     [SerializeField] private Button pMenu;
     [SerializeField] private Button pResume;
-
+    [SerializeField] private TextMeshProUGUI scoreText;
+    private int score = 0;
     private void Start()
     {
         pauseMenu.SetActive(false);
@@ -51,6 +52,9 @@ public class UI_Controller : MonoBehaviour
 
     public void GameOver()
     {
+        AudioManager.Instance.PlayEffects(Sounds.gameOver);
+        
+
         Time.timeScale = 0f;
         GamePaused = true;
         gameOverScreen.SetActive(true);
@@ -58,6 +62,8 @@ public class UI_Controller : MonoBehaviour
 
     private void Restart()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         Time.timeScale = 1f;
         GamePaused = false;
         gameOverScreen.SetActive(false);
@@ -67,6 +73,8 @@ public class UI_Controller : MonoBehaviour
 
     private void Menu()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         Time.timeScale = 1f;
         GamePaused = false;
 
@@ -75,8 +83,18 @@ public class UI_Controller : MonoBehaviour
 
     private void Resume()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         Time.timeScale = 1f;
         GamePaused = false;
         pauseMenu.SetActive(false);
+    }
+
+
+    public void ScoreIncrease(int increment)
+    {
+        score += increment;
+        scoreText.text = "Score : " + score;
+        PlayerPrefs.SetInt("score", score);
     }
 }

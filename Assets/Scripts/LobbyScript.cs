@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LobbyScript : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class LobbyScript : MonoBehaviour
     [SerializeField] private Button close;
     [SerializeField] private GameObject details;
     [SerializeField] private GameObject[] pages = new GameObject[4];
+    [SerializeField] private TextMeshProUGUI highScoreText;
     private int currentPageIndex;
     void Start()
     {
@@ -27,19 +29,25 @@ public class LobbyScript : MonoBehaviour
 
     private void Play()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
         SceneManager.LoadScene(1);
     }
     private void Quit()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         Application.Quit();
     }
 
     private void Instructions()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         details.SetActive(true);
         leftArrow.gameObject.SetActive(false);
         rightArrow.gameObject.SetActive(true);
         close.gameObject.SetActive(true);
+        highScoreText.gameObject.SetActive(false);
         pages[0].SetActive(true);
         pages[1].SetActive(false);
         pages[2].SetActive(false);
@@ -49,16 +57,24 @@ public class LobbyScript : MonoBehaviour
 
     private void HighScore()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         details.SetActive(true);
         pages[0].SetActive(false);
         pages[1].SetActive(false);
         pages[2].SetActive(false);
         pages[3].SetActive(false);
         close.gameObject.SetActive(true);
+
+        int score = PlayerPrefs.GetInt("score", 0);
+        highScoreText.gameObject.SetActive(true);
+        highScoreText.text = "High Score is : " + score;
     }
 
     private void Left()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         rightArrow.gameObject.SetActive(true);
         pages[currentPageIndex].SetActive(false);
         currentPageIndex--;
@@ -71,6 +87,8 @@ public class LobbyScript : MonoBehaviour
 
     private void Right()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         leftArrow.gameObject.SetActive(true);
         pages[currentPageIndex].SetActive(false);
         currentPageIndex++;
@@ -82,6 +100,8 @@ public class LobbyScript : MonoBehaviour
     }
     private void Close()
     {
+        AudioManager.Instance.PlayEffects(Sounds.click);
+
         leftArrow.gameObject.SetActive(false);
         rightArrow.gameObject.SetActive(false);
         details.SetActive(false);

@@ -110,6 +110,7 @@ public class SpawnerAndMover : MonoBehaviour
             coin.GetComponent<SpriteRenderer>().sortingLayerID = SortingLayer.layers[pathNumber].id;
             CollectiblesController script = coin.GetComponent<CollectiblesController>();
             script.moverScript = spawnerAndMover;
+            script.scoreScript = uiScript;
         }
         coinTimer += Time.deltaTime;
     }
@@ -152,6 +153,7 @@ public class SpawnerAndMover : MonoBehaviour
         Debug.Log("Tiger Killed");
         tigerAlert.RemoveAlerting();
         tiger.SetActive(false);
+        uiScript.ScoreIncrease(100);
         StopCoroutine(huntDuration);
         TigerEntry();
     }
