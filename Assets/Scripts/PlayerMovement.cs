@@ -13,9 +13,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UI_Controller uiScript;
     private Vector3 playerPosition;
     private Vector3 playerScale;
-    private Rigidbody2D playerRigidBody;
-    private Animator playerAnimator;
-    private SpriteRenderer playerRenderer;
+    [SerializeField]  private Rigidbody2D playerRigidBody;
+    [SerializeField]  private Animator playerAnimator;
+    [SerializeField]  private SpriteRenderer playerRenderer;
     private bool transitioningPath = false;
     private bool playerscared = false;
 
@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isShootingDone = false;
     [Header("Shooting Variables")]
-    private ShootingAndAiming shootScript;
+    [SerializeField] private ShootingAndAiming shootScript;
     [SerializeField] private GameObject bowOnShoulder;
     [SerializeField] private GameObject hand;
  
@@ -32,10 +32,6 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         playerScale = transform.localScale;
-        playerRigidBody = GetComponent<Rigidbody2D>();
-        shootScript = GetComponent<ShootingAndAiming>();
-        playerAnimator = player.GetComponent<Animator>();
-        playerRenderer = player.GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -78,10 +74,7 @@ public class PlayerMovement : MonoBehaviour
         playerRenderer.sortingLayerID = SortingLayer.layers[(int)moveTo].id;
         
     }
-    private void FixedUpdate()
-    {
-        
-    }
+
     private void Movement()
     {
         //left and right movement
@@ -145,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 11)
+        if (collision.gameObject.GetComponent<RhinoController>() != null)
         {
             uiScript.GameOver();
         }

@@ -22,7 +22,7 @@ public class SpawnerAndMover : MonoBehaviour
     [SerializeField] private GameObject[] treeList = new GameObject[2];
     [SerializeField] private PathController pathcontroller;
     [SerializeField] private GameObject coinPrefab;
-    [SerializeField] private GameObject tree1, tree2, tree3, tree4;
+    [SerializeField] private BackGroundScroller tree1, tree2, tree3, tree4;
     [SerializeField] private GameObject greenBG;
     [SerializeField] private GameObject rhinoPrefab;
     [SerializeField] private UI_Controller uiScript;
@@ -39,12 +39,12 @@ public class SpawnerAndMover : MonoBehaviour
     private void Start()
     {
         SetBackSpeed(4f);
-        spawnerAndMover = GetComponent<SpawnerAndMover>();
+        spawnerAndMover = this;
         backgroundSpeed = 0.75f * backSpeed;
-        tree1.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
-        tree2.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
-        tree3.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
-        tree4.GetComponent<BackGroundScroller>().moverScript = spawnerAndMover;
+        tree1.moverScript = spawnerAndMover;
+        tree2.moverScript = spawnerAndMover;
+        tree3.moverScript = spawnerAndMover;
+        tree4.moverScript = spawnerAndMover;
         bg1 = Instantiate(greenBG, bgPos1, Quaternion.identity);
         bg2 = Instantiate(greenBG, bgPos2, Quaternion.identity);
 
@@ -62,14 +62,11 @@ public class SpawnerAndMover : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == 7 || collision.gameObject.layer == 10 || collision.gameObject.layer == 11)
-        {
-            Destroy(collision.gameObject);
-        }
-        else if (collision.gameObject.layer == 6)
+        if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             uiScript.GameOver();
         }
+        Destroy(collision.gameObject);
     }
     public void SetBackSpeed(float _backspeed)
     {

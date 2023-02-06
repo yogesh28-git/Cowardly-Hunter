@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public enum Path
@@ -16,60 +15,40 @@ public class PathController : MonoBehaviour
     [SerializeField] private GameObject path1;
     [SerializeField] private GameObject path2;
     [SerializeField] private GameObject path3;
-    private Tilemap path1TileMap;
-    private Tilemap path2TileMap;
-    private Tilemap path3TileMap;
+    [SerializeField] private Tilemap path1TileMap;
+    [SerializeField] private Tilemap path2TileMap;
+    [SerializeField] private Tilemap path3TileMap;
 
     private Color highlight = Color.white;
 
+    [Serializable]
+    public struct PathAndPos
+    {
+        public Path path;
+        public Transform pathTransform;
+    }
+    [SerializeField] private PathAndPos[] pathAndPosArray;
+
     private void Start()
     {
-        path1TileMap = path1.GetComponent<Tilemap>();
-        path2TileMap = path2.GetComponent<Tilemap>();
-        path3TileMap = path3.GetComponent<Tilemap>();
         path1TileMap.color = Color.white;
         path2TileMap.color = Color.white;
         path3TileMap.color = Color.white;
         highlight.a = 0.7f;
     }
 
+  
     public Vector3 GetPathPosition(Path path)
     {
-        Vector3 pathPos;
-        
-        if (path == Path.path1)
-        {
-            pathPos = path1.transform.position;
-        }
-        else if (path == Path.path2)
-        {
-            pathPos = path2.transform.position;
-        }
-        else
-        {
-            pathPos = path3.transform.position;
-        }
-        return pathPos;
+        PathAndPos item = Array.Find(pathAndPosArray, i => i.path == path);
+        return item.pathTransform.position;
     }
 
     public Path GetPath(Transform objTransform)
     {
-        if(objTransform.position.y == path1.transform.position.y)
-        {
-            return Path.path1;
-        }
-        else if (objTransform.position.y == path2.transform.position.y)
-        {
-            return Path.path2;
-        }
-        else if (objTransform.position.y == path3.transform.position.y)
-        {
-            return Path.path3;
-        }
-        else
-        {
-            return Path.invalid;
-        }
+        float posY = objTransform.position.y;
+        PathAndPos item = Array.Find(pathAndPosArray, i => i.pathTransform.position.y == posY);
+        return item.path;
     }
     public void PathUpdate(Path path)
     {

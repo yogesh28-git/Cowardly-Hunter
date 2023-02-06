@@ -14,8 +14,8 @@ public class TigerMovement : MonoBehaviour
     private bool isGameOver = false;
     private bool turnedAround = false;
     private IEnumerator turnCoroutine;
-    private Animator tigerAnimator;
-    private SpriteRenderer tigerRenderer;
+    [SerializeField] private Animator tigerAnimator;
+    [SerializeField] private SpriteRenderer tigerRenderer;
     private float pathChangeTimer = 0;
     private int randomWaitSeconds = 3;
     private Path currentPath = Path.path1;
@@ -30,8 +30,6 @@ public class TigerMovement : MonoBehaviour
 
     private void Start()
     {
-        tigerAnimator = GetComponent<Animator>();
-        tigerRenderer = GetComponent<SpriteRenderer>();
         rayHitLayers = layermask.value;
         turnCoroutine = turning();
 
@@ -88,7 +86,7 @@ public class TigerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer == 8)
+        if(collision.gameObject.GetComponent<ArrowBehaviour>() != null)
         {
             if (collision.gameObject.GetComponent<ArrowBehaviour>().GetArrowReleasedPath() == currentPath && pathChanged && !turnedAround)
             {
@@ -115,7 +113,7 @@ public class TigerMovement : MonoBehaviour
             Debug.DrawRay(origin, Vector2.left, Color.black, 2f);
             if(hit.collider != null && rayHit == false)
             {
-                if ((hit.collider.gameObject.layer == player.gameObject.layer) && (this.currentPath == pathcontroller.GetPath(player)))
+                if ((hit.collider.gameObject.GetComponent<PlayerMovement>() != null) && (this.currentPath == pathcontroller.GetPath(player)))
                 {
                     rayHit = true;
                     StopCoroutine(turnCoroutine);

@@ -5,11 +5,10 @@ using UnityEngine;
 public class ArrowBehaviour : MonoBehaviour
 {
     [SerializeField] private float arrowSpeed;
-    private Rigidbody2D arrowRigidBody;
+    [SerializeField] private Rigidbody2D arrowRigidBody;
     private Path arrowReleasedPath;
     private void Start()
     {
-        arrowRigidBody = GetComponent<Rigidbody2D>();
         ArrowVelocity();
         Destroy(gameObject, 5);
     }
@@ -25,7 +24,7 @@ public class ArrowBehaviour : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer == 7)
+        if(collision.gameObject.GetComponent<BackGroundScroller>() != null)
         {
             Destroy(gameObject);
         }

@@ -12,14 +12,10 @@ public class ShootingAndAiming : MonoBehaviour
     [SerializeField] private GameObject arrowPrefab;
     [SerializeField] private GameObject hand;
     [SerializeField] private Transform spawnPoint;
-    private PlayerMovement playermovement;
+    [SerializeField] private PlayerMovement playermovement;
     private GameObject arrowInstance;
     private Vector3 handRotation;
 
-    private void Start()
-    {
-        playermovement = GetComponent<PlayerMovement>();
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))

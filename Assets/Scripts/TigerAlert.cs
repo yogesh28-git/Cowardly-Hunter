@@ -19,7 +19,7 @@ public class TigerAlert : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == 6)
+        if(collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             alertCircle.SetActive(true);
             StopCoroutine(alert);
@@ -30,7 +30,7 @@ public class TigerAlert : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             StopCoroutine(alert);
             alert = Alert();

@@ -260,6 +260,16 @@ MonoBehaviour:
   path1: {fileID: 625917435}
   path2: {fileID: 1748134758}
   path3: {fileID: 673124781}
+  path1TileMap: {fileID: 625917438}
+  path2TileMap: {fileID: 1748134761}
+  path3TileMap: {fileID: 673124784}
+  pathAndPosArray:
+  - path: 3
+    pathTransform: {fileID: 625917436}
+  - path: 2
+    pathTransform: {fileID: 1748134759}
+  - path: 1
+    pathTransform: {fileID: 673124782}
 --- !u!1 &55440750
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +538,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5467230711495402798, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
   m_PrefabInstance: {fileID: 113559160}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &113559162 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5467230711495402803, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
+  m_PrefabInstance: {fileID: 113559160}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69157cb15f50a1a41b555591b8e583b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &281402582
 GameObject:
   m_ObjectHideFlags: 0
@@ -11246,6 +11267,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5467230711495402798, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
   m_PrefabInstance: {fileID: 283693680}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &283693682 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5467230711495402803, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
+  m_PrefabInstance: {fileID: 283693680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69157cb15f50a1a41b555591b8e583b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &319900178
 GameObject:
   m_ObjectHideFlags: 0
@@ -14213,6 +14245,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5052710099019034368, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
   m_PrefabInstance: {fileID: 699973245}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &699973247 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5052710099019034365, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
+  m_PrefabInstance: {fileID: 699973245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69157cb15f50a1a41b555591b8e583b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &715075637
 GameObject:
   m_ObjectHideFlags: 0
@@ -14281,11 +14324,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &852550720 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5467230711495402799, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
-  m_PrefabInstance: {fileID: 283693680}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &924756142
 GameObject:
   m_ObjectHideFlags: 0
@@ -14674,10 +14712,10 @@ MonoBehaviour:
   - {fileID: 5467230711495402799, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
   pathcontroller: {fileID: 55238046}
   coinPrefab: {fileID: 5172278520620212561, guid: adae333a41708774d976c8de1704980b, type: 3}
-  tree1: {fileID: 1900824788}
-  tree2: {fileID: 1593599320}
-  tree3: {fileID: 852550720}
-  tree4: {fileID: 1367328319}
+  tree1: {fileID: 699973247}
+  tree2: {fileID: 1425315289}
+  tree3: {fileID: 283693682}
+  tree4: {fileID: 113559162}
   greenBG: {fileID: 791723907066731420, guid: f8de858be6b0d354da48b95a1dd23a03, type: 3}
   rhinoPrefab: {fileID: 4153560622974396527, guid: a641fdf9cac01cf489caf157a4067824, type: 3}
   uiScript: {fileID: 972757387}
@@ -15136,6 +15174,8 @@ MonoBehaviour:
   player: {fileID: 4431761122815784019}
   tigerAlert: {fileID: 51850580}
   uiScript: {fileID: 972757387}
+  tigerAnimator: {fileID: 1115033031}
+  tigerRenderer: {fileID: 1115033029}
   layermask:
     serializedVersion: 2
     m_Bits: 192
@@ -15296,11 +15336,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1203784799}
   m_CullTransparentMesh: 1
---- !u!1 &1367328319 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5467230711495402799, guid: e27556aa5d7fb3940a7b570fd290c2bc, type: 3}
-  m_PrefabInstance: {fileID: 113559160}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1425315287
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15371,6 +15406,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5052710099019034368, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
   m_PrefabInstance: {fileID: 1425315287}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1425315289 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5052710099019034365, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
+  m_PrefabInstance: {fileID: 1425315287}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69157cb15f50a1a41b555591b8e583b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1464402199
 GameObject:
   m_ObjectHideFlags: 0
@@ -15551,11 +15597,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8515053, y: 27.061214}
   m_EdgeRadius: 0
---- !u!1 &1593599320 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5052710099019034369, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
-  m_PrefabInstance: {fileID: 1425315287}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1654364158
 GameObject:
   m_ObjectHideFlags: 0
@@ -17686,11 +17727,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1856816817}
   m_CullTransparentMesh: 1
---- !u!1 &1900824788 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5052710099019034369, guid: a2dd4737cd30529429af9d9f6ec6e88f, type: 3}
-  m_PrefabInstance: {fileID: 699973245}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2132553583
 GameObject:
   m_ObjectHideFlags: 0
@@ -17881,6 +17917,7 @@ MonoBehaviour:
   arrowPrefab: {fileID: 65065817504061928, guid: dbabf8c636350f849b48fe06e73a2e1e, type: 3}
   hand: {fileID: 4431761122491260930}
   spawnPoint: {fileID: 4431761121815226304}
+  playermovement: {fileID: 3078814865647819568}
 --- !u!4 &210098933100450371
 Transform:
   m_ObjectHideFlags: 0
@@ -17986,6 +18023,10 @@ MonoBehaviour:
   pathcontroller: {fileID: 55238046}
   player: {fileID: 9129144103272228952}
   uiScript: {fileID: 972757387}
+  playerRigidBody: {fileID: 61832403059972429}
+  playerAnimator: {fileID: 1756681133130555158}
+  playerRenderer: {fileID: 3202121476787630356}
+  shootScript: {fileID: 61832403894573692}
   bowOnShoulder: {fileID: 4431761123390226990}
   hand: {fileID: 4431761122491260930}
 --- !u!212 &3202121476787630356

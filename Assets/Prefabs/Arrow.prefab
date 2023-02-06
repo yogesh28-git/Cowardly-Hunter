@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowSpeed: 25
+  arrowRigidBody: {fileID: 1182597185}
 --- !u!1 &4738094480452043745
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,11 +8,11 @@ public class BehindTiger : MonoBehaviour
     [SerializeField] private PlayerMovement player;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.GetComponent<ArrowBehaviour>() != null)
         {
             tiger.TurnAround();
         }
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             player.PlayerScared(true);
         }
@@ -20,7 +20,7 @@ public class BehindTiger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             player.PlayerScared(false);
         }
