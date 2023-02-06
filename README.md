@@ -15,3 +15,4 @@ This is an endless runner side scrolling 2D game in which the player (hunter) sc
 - A *Rhino* rampages across destroying trees and whatever in its path. Player is killed if hit.
 - Player getting close to tiger increases *alert level* of tiger and tiger turns around to look for player.
 
+![This is an Image](https://github.com/yogesh28-git/Cowardly-Hunter/blob/main/Assets/Art/Poster/Cowardly%20Hunter.png)
